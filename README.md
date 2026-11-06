@@ -23,9 +23,7 @@ tnp_playwright_framework/
 ```
 
 ## Available functions
-
-Team members add their functions here when they add them to the framework.
-
-| File | Function | What it does           | Author
-|      |          |                        |
-|      |          |                        |
+| File | Function | What it does |
+| form_actions.py | select_radio_button | Selects a radio button by its value. 
+| form_actions.py | select_multiple_dropdown_options | Selects multiple values from a native HTML `<select multiple>` element. |
+| table_actions.py | check_table_pagination | Navigates through pages using Next, or clicks a specified page number. Returns the number of pages visited or the selected page number. |
