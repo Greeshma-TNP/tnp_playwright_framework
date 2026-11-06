@@ -23,7 +23,6 @@ tnp_playwright_framework/
 ```
 
 ## Available functions
-
 | File | Function | What it does |
 | form_actions.py | select_radio_button | Selects a radio button by its value. 
 | form_actions.py | select_multiple_dropdown_options | Selects multiple values from a native HTML `<select multiple>` element. |
