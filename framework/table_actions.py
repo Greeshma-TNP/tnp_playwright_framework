@@ -3,14 +3,6 @@ from typing import Optional
 from playwright.sync_api import Locator
 
 
-def _is_pagination_enabled(button: Locator) -> bool:
-    return (
-        button.is_enabled()
-        and button.get_attribute("aria-disabled") != "true"
-        and "disabled" not in (button.get_attribute("class") or "").split()
-    )
-
-
 # Author: Aathira Shaji
 # Description: Navigates through table pages or clicks a specified page number.
 def check_table_pagination(
@@ -23,7 +15,7 @@ def check_table_pagination(
     """Navigate through pages and return their count, or click a specific page."""
     table.wait_for(state="visible")
     next_button.wait_for(state="visible")
-    previous_button.wait_for(state="visible")
+    previous_button.wait_for(state="visible") 
 
     if page_button is not None:
         page_button.wait_for(state="visible")
@@ -35,7 +27,7 @@ def check_table_pagination(
 
     pages_visited = 1
 
-    while _is_pagination_enabled(next_button):
+    while next_button.is_enabled():
         if pages_visited >= max_pages:
             raise RuntimeError(f"Pagination exceeded the limit of {max_pages} pages.")
 

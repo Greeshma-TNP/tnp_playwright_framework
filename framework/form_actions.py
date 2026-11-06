@@ -1,5 +1,5 @@
 import logging
-from typing import List, Optional, Sequence
+from typing import List, Sequence
 
 from playwright.sync_api import Locator
 
@@ -33,43 +33,22 @@ def select_radio_button(radio_group: Locator, value: str) -> str:
 
 
 # Author: Aathira Shaji
-# Description: Selects and verifies multiple options in native or searchable dropdowns.
+# Description: Selects and verifies multiple values in a native HTML multi-select.
 def select_multiple_dropdown_options(
     dropdown: Locator,
     values: Sequence[str],
-    listbox: Optional[Locator] = None,
-    search_box: Optional[Locator] = None,
 ) -> List[str]:
-    """Select and verify multiple options in a native or custom dropdown."""
+    """Select multiple values in a native <select multiple> element."""
     if not values:
         raise ValueError("At least one dropdown option must be provided.")
 
     dropdown.wait_for(state="visible")
-    if dropdown.evaluate("(element) => element.tagName.toLowerCase()") == "select":
-        if dropdown.get_attribute("multiple") is None:
-            raise ValueError("The native <select> must have the multiple attribute.")
-        selected = dropdown.select_option(value=list(values))
-        if set(selected) != set(values):
-            raise RuntimeError(f"Could not select all requested options: {list(values)}")
-        return selected
+    if dropdown.evaluate("(element) => element.tagName.toLowerCase()") != "select":
+        raise ValueError("This method only supports native HTML <select> elements.")
+    if dropdown.get_attribute("multiple") is None:
+        raise ValueError("The native <select> must have the multiple attribute.")
 
-    if listbox is None:
-        raise ValueError("Pass the listbox locator for a custom dropdown.")
-
-    selected = []
-    for value in values:
-        if not listbox.is_visible():
-            dropdown.click()
-        listbox.wait_for(state="visible")
-
-        if search_box is not None:
-            search_box.fill(value)
-
-        option = listbox.get_by_role("option", name=value, exact=True)
-        if option.get_attribute("aria-selected") != "true":
-            option.click()
-        if option.get_attribute("aria-selected") != "true":
-            raise RuntimeError(f"Dropdown option {value!r} was not selected.")
-        selected.append(value)
-
+    selected = dropdown.select_option(value=list(values))
+    if set(selected) != set(values):
+        raise RuntimeError(f"Could not select all requested options: {list(values)}")
     return selected
